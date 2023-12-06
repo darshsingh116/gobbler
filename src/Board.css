@@ -1,0 +1,37 @@
+/* Add your styles to App.css or a separate stylesheet */
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 100% of the viewport height */
+  }
+  
+  .board-container {
+    border: 2px solid #000000; /* Single border around the entire grid */
+    padding: 20px; /* Increased padding for more spacing */
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); 
+    grid-template-rows: repeat(3, 100px); 
+    gap: 10px;
+  }
+
+  .bg{
+    background-color: aquamarine;
+    
+  }
+  
+  .board-cell {
+    background-color: #000000;
+    flex: 50px;
+    border: 5px solid #ccc; /* Border for each cell */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Add additional styling as needed */
+  

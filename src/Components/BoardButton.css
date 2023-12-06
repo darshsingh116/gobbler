@@ -1,0 +1,18 @@
+/* styles.css */
+
+.square-button {
+    width: 100px;
+    height: 100px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  .square-button:hover {
+    background-color: #2980b9;
+  }
+  

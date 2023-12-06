@@ -1,0 +1,16 @@
+.red-button {
+    width: 100px;
+    height: 100px;
+    background-color: #f85f5f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  .red-button:hover {
+    background-color: #f45252;
+  }
+  
