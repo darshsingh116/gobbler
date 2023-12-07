@@ -13,7 +13,7 @@ const Board = () => {
 
   //MAIN GAME BRAIN HERE
   //p1 = 0 even, p2 = 1 odd
-  //const [playerTurn, setplayerTurn] = useState(0); 
+  const [playerTurnDOM, setplayerTurnDOM] = useState(0); 
   let playerTurn = 0;
   const [board, setBoard] = useState([
     [0,0,0],
@@ -33,10 +33,13 @@ const Board = () => {
   ]);
   const updateGameState = (x,y,add,remainder,index,myid) => {
     //checking of Piece selected even exsist
-    console.log(`x: ${x}, y: ${y}, add: ${add}, remainder: ${remainder}, index: ${index}, myid: ${myid}, turn:${playerTurn}`);
+    //console.log(`x: ${x}, y: ${y}, add: ${add}, remainder: ${remainder}, index: ${index}, myid: ${myid}, turn:${playerTurn}`);
 
-    if(myid >= 10){
-      const selected = myid%10;
+    //from myid to index(x,y)
+    
+    var selected = myid%10;
+    if(myid >= 10){//for this if selected is size as it only can be 10 11 or 12 but change for other possible in else as its from 0 to 8 after myid--
+      
       if(gamePieces[remainder][selected] > 0 ){
         //Game logic here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // 111 means l,m,s of odd player
@@ -47,11 +50,13 @@ const Board = () => {
         }  
         // checking if valid move and moving
         if(boardDigit%10 === 0 && boardDigit<10){          
-          console.log(add*Math.pow(10,selected));
+          //console.log(add*Math.pow(10,selected));
           board[x][y] = board[x][y] + add*Math.pow(10,selected); //adding x,y cell with new legal move
           setBoard(board); //setting the board
-          console.log(`bef turn:${playerTurn}`);
-          setplayerTurn((prev)=> prev+1); //updating turn
+          //console.log(`bef turn:${playerTurn}`);
+          playerTurn++;
+          setplayerTurnDOM(playerTurn); //updating turn
+          
           //console.log(`af turn:${playerTurn}`);
          
           gamePieces[remainder][selected]--; //subtracting the used piece
@@ -63,8 +68,65 @@ const Board = () => {
   
           setGamePieces(gamePieces); //updating gamePieces
           //showPieceOnCell(selected,index);
-          console.log(board);
+          //console.log(board);
         }
+      }
+    }else{
+      myid--;
+      var upperPiece = 0;
+      //console.log(board[Math.floor((myid) / 3)][(myid+3) % 3]);
+      if(board[Math.floor((myid) / 3)][(myid+3) % 3]===0){
+        upperPiece = 0;
+      }
+      else if(board[Math.floor((myid) / 3)][(myid+3) % 3]<9){
+        upperPiece =board[Math.floor((myid) / 3)][(myid+3) % 3]%10;
+        selected = 0;
+      }else if(board[Math.floor((myid) / 3)][(myid+3) % 3]<90){
+        upperPiece =Math.floor(board[Math.floor((myid) / 3)][(myid+3) % 3]/10);
+        upperPiece =upperPiece%10;
+        selected = 1;
+      }else if(board[Math.floor((myid) / 3)][(myid+3) % 3]<999){
+        upperPiece =Math.floor(board[Math.floor((myid) / 3)][(myid+3) % 3]/100);
+        upperPiece =upperPiece%10;
+        selected = 2;
+      }
+      console.log(`upperpiece ${upperPiece} , selected ${selected}`);
+      
+      if(upperPiece > 0 && upperPiece%2 === remainder){
+        add = upperPiece;
+        console.log("legal move")
+        //Game logic here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // 111 means l,m,s of odd player
+        //calculating the selected'th digit out of board sub square
+        var boardDigit = board[x][y];
+        for(var i=0;i<selected;i++){
+          boardDigit = Math.floor(boardDigit/10);
+        }  
+        // checking if valid move and moving
+        console.log(boardDigit);
+        if(boardDigit%10 === 0 && boardDigit<10){          
+          //console.log(add*Math.pow(10,selected));
+          board[x][y] = board[x][y] + add*Math.pow(10,selected); //adding x,y cell with new legal move
+          setBoard(board); //setting the board
+          //console.log(`bef turn:${playerTurn}`);
+          playerTurn++;
+          setplayerTurnDOM(playerTurn); //updating turn
+          
+          //console.log(`af turn:${playerTurn}`);
+         
+          //gamePieces[remainder][selected]--; //subtracting the used piece
+
+          // else{
+          console.log(`from ${board[Math.floor((myid) / 3)][(myid+3) % 3]} the value subtracted is ${add*Math.pow(10,selected)}`);
+          board[Math.floor((myid) / 3)][(myid+3) % 3] = board[Math.floor((myid) / 3)][(myid+3) % 3] - add*Math.pow(10,selected);
+          // }
+          
+  
+          setGamePieces(gamePieces); //updating gamePieces
+          //showPieceOnCell(selected,index);
+          //console.log(board);
+        }
+      
       }
     }
        
@@ -289,9 +351,10 @@ const Board = () => {
   }));
 
   function addItemToBoard(index,myid,playerTurn){
+    index--;
     var add=1;
     var remainder = playerTurn % 2;
-    console.log(`playerTurn ${playerTurn}`);
+    //console.log(`playerTurn ${playerTurn}`);
     if(remainder === 0){
       add = 2;
     }
@@ -303,7 +366,7 @@ const Board = () => {
 
   return (<>
   <div className="bg">
-      <h1>Player {(playerTurn)}'s turn</h1>
+      <h1>Player {(playerTurnDOM%2)}'s turn</h1>
     </div>
   
   <div className="board-container">
