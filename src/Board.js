@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import './Board.css';
 import { useDrop } from "react-dnd";
 import { useDrag } from "react-dnd";
-import smallPiece from './assets/small.png';
+import smallPieceYellow from './assets/small_yellow.png';
+import medPieceYellow from './assets/meduim_yellow.png';
+import largePieceYellow from './assets/large_yellow.png';
+import defaultImg from './assets/satisfied.jpg';
+import medPieceRed from './assets/meduim_red.png';
+import largePieceRed from './assets/large_red.png';
+import smallPieceRed from './assets/small_red.png';
 import medPiece from './assets/meduim.png';
 import largePiece from './assets/large.png';
-import defaultImg from './assets/satisfied.jpg';
-
+import smallPiece from './assets/small.png';
 
 const Board = () => {
 
@@ -14,6 +19,7 @@ const Board = () => {
   //MAIN GAME BRAIN HERE
   //p1 = 0 even, p2 = 1 odd
   const [playerTurnDOM, setplayerTurnDOM] = useState(0); 
+  const [won , setWon] = useState(0);
   let playerTurn = 0;
   const [board, setBoard] = useState([
     [0,0,0],
@@ -67,7 +73,7 @@ const Board = () => {
           
   
           setGamePieces(gamePieces); //updating gamePieces
-          //showPieceOnCell(selected,index);
+          showPieceOnCell(selected,index,myid,selected,add);
           //console.log(board);
         }
       }
@@ -123,20 +129,103 @@ const Board = () => {
           
   
           setGamePieces(gamePieces); //updating gamePieces
-          //showPieceOnCell(selected,index);
+          showPieceOnCell(selected,index,myid,selected,add);
           //console.log(board);
         }
       
       }
     }
+    console.log(hasWon());
+    setWon(hasWon());
        
   };
 
 
 
-  function showPieceOnCell(pieceSize,index){
-    const imgMap = [smallPiece,medPiece,largePiece];
-    setBoardImg(imgMap[index] = imgMap[pieceSize]);
+
+  
+
+
+  function getTopPiece(x,y){
+    var upperPiece=0;
+    //var selected = 0;
+    if(board[x][y]===0){
+      upperPiece = 0;
+      //selected = 0;
+    }
+    else if(board[x][y]<9){
+    upperPiece =board[x][y]%10;
+    //selected=10;
+    }else if(board[x][y]<90){
+      upperPiece =Math.floor(board[x][y]/10);
+      upperPiece =upperPiece%10;
+      //selected=20;
+    }else if(board[x][y]<999){
+      upperPiece =Math.floor(board[x][y]/100);
+      upperPiece =upperPiece%10;   
+      //selected =30; 
+    }
+    return upperPiece;
+  }
+
+
+  function hasWon(){
+    if(getTopPiece(0,0)===getTopPiece(0,1) && getTopPiece(0,1) ===getTopPiece(0,2)){
+      return getTopPiece(0,0);
+    }else if(getTopPiece(1,0)===getTopPiece(1,1) && getTopPiece(1,1)===getTopPiece(1,2)){
+      return getTopPiece(1,0);
+    }else if(getTopPiece(2,0)===getTopPiece(2,1) && getTopPiece(2,1)===getTopPiece(2,2)){
+      return getTopPiece(2,0);
+    }else if(getTopPiece(0,0)===getTopPiece(1,0) && getTopPiece(1,0)===getTopPiece(2,0)){
+      return getTopPiece(0,0);
+    }else if(getTopPiece(0,1)===getTopPiece(1,1) && getTopPiece(1,1)===getTopPiece(2,1)){
+      return getTopPiece(0,1);
+    }else if(getTopPiece(0,2)===getTopPiece(1,2) && getTopPiece(1,2)===getTopPiece(2,2)){
+      return getTopPiece(0,2);
+    }else if(getTopPiece(0,0)===getTopPiece(1,1) && getTopPiece(1,1)===getTopPiece(2,2)){
+      return getTopPiece(0,0);
+    }else if(getTopPiece(0,2)===getTopPiece(1,1) && getTopPiece(1,1)===getTopPiece(2,0)){
+      return getTopPiece(0,2);
+    }else { return 0;}
+  
+  }
+
+  function showPieceOnCell(pieceSize,index,myid,selected,add){
+    // for(var x=0;x<3;x++){
+    //   for(var y=0;y<3;y++){
+    //     var code = getTopPiece();
+    //     var upperPiece = code%10;
+    //     var selected = (Math.floor(code/10))-1;
+    //     const imgMap = [smallPiece,medPiece,largePiece];
+    //     boardImg[x*3+y+1] = imgMap[pieceSize];
+    //     console.log(imgMap[pieceSize]);
+    //     setBoardImg(boardImg);
+    //   }
+    // }
+
+    //updating the recieving cell
+    index++;
+    const imgMap = [[defaultImg,smallPieceYellow,medPieceYellow,largePieceYellow],[defaultImg,smallPieceRed,medPieceRed,largePieceRed]];
+    boardImg[index] = imgMap[add-1][pieceSize+1];
+    //console.log(imgMap[pieceSize]);
+    setBoardImg(boardImg);
+
+    //updating the sender's cell
+    if(myid < 10){
+    var pieceBelow = Math.floor((board[Math.floor((myid) / 3)][(myid+3) % 3])/(Math.pow(10,selected-1)))%10;
+    console.log(`board value ${board[Math.floor((myid) / 3)][(myid+3) % 3]} piece below ${pieceBelow} and myid ${myid+1}`);
+    if(pieceBelow===0){
+      selected =0;
+      boardImg[myid+1] = imgMap[0][selected];
+    }
+    else{
+      boardImg[myid+1] = imgMap[(pieceBelow-1)][selected];
+    }
+    
+    
+    //console.log(imgMap[pieceSize]);
+    setBoardImg(boardImg);
+    }
   }
 
 
@@ -364,9 +453,11 @@ const Board = () => {
     console.log("from " +myid+ " dropped to "+index);
   }
 
+  if(won===0){
+
   return (<>
   <div className="bg">
-      <h1>Player {(playerTurnDOM%2)}'s turn</h1>
+      <h1>Player {(playerTurnDOM%2)===0?"Red":"Yellow"}'s turn</h1>
     </div>
   
   <div className="board-container">
@@ -389,14 +480,36 @@ const Board = () => {
     </div>
     
   </div>
+  <div style={{ display: 'flex' }}>
 
-  <img ref={drag01} src={smallPiece} width="100px" style={{margin:"20px"}}/>
-  <img ref={drag02} src={medPiece} width="100px" style={{margin:"20px"}}/>
-  <img ref={drag03} src={largePiece} width="100px" style={{margin:"20px"}}/>
+  
+<div>
+<img ref={drag01} src={smallPiece} width="100px" style={{margin:"20px"}}/>
+<div><span>Counter: 0</span></div>
+</div>
+<div>
+<img ref={drag02} src={medPiece} width="100px" style={{margin:"20px"}}/>
+<div><span>Counter: 0</span></div>
+</div>
+<div>
+<img ref={drag03} src={largePiece} width="100px" style={{margin:"20px"}}/>
+<div><span>Counter: 0</span></div>
+</div>
+</div>
     
 
     </>
-  );
+  );}
+
+  else{
+    return(
+      <>
+<div className="bg">
+      <h1>Player {(won%2)===0?"Red":"Yellow"} won kal ana</h1>
+    </div>
+      </>
+    )
+  }
 };
 
 
