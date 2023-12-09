@@ -458,9 +458,28 @@ const Board = () => {
     console.log(gamePieces[(playerTurn+1)%2]);
 
   return (<>
+
+<div className="instructions-container">
+    <h2 className='center-text'>Gobbler Game Instructions</h2>
+    <p className='center-text'>Welcome to the Gobbler game! Here are the instructions:</p>
+    <ul>
+      <li>Player 1 is represented by the Red.</li>
+      <li>Player 2 is represented by the Yellow.</li>
+      <li><b>On your turn, Drag and drop your pieces.</b></li>
+      <li>There are 3 sizes: Small , Medium, Large. One can gobble(put onto) smaller piece with relatively larger one.</li>
+      <li>Each player gets 2 piece of each size.</li>
+      <li>One can move only their Piece from board also.</li>
+      <li>Pieces under another piece remain there for future.</li>
+      <li>One can place/gobble on thier own piece also</li>
+      <li>The goal is to get 3 of your symbols in a row vertically, horizontally, or diagonally.</li>
+      <li>The game ends when one player achieves this goal.</li>
+    </ul>
+    <p className='center-text'>Enjoy the game!</p>
+  </div>
   <div className="bg">
       <h1>Player {(playerTurnDOM%2)===0?"Red":"Yellow"}'s turn</h1>
     </div> 
+<div className="board-div">
   <div className="board-container">
     <div className="board">
     <div ref={drop1} className="board-cell" ><img className="cell-img" ref={drag1} src={boardImg[1]} /></div>
@@ -473,6 +492,7 @@ const Board = () => {
     <div ref={drop8} className="board-cell" ><img className="cell-img" ref={drag8} src={boardImg[8]} /></div>
     <div ref={drop9} className="board-cell" ><img className="cell-img" ref={drag9} src={boardImg[9]} /></div>
     </div>   
+  </div>
   </div>
   <div className='span-div'> 
 <div className='image-container'>
